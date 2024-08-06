@@ -23,6 +23,10 @@ public class Todo {
     @Column(name = "complete_time")
     private LocalDateTime completeTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @PrePersist
     private void onCreate() {
         this.creationTime = LocalDateTime.now();
