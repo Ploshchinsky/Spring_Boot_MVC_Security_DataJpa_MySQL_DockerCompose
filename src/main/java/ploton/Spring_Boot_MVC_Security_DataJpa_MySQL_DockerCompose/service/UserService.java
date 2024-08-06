@@ -14,4 +14,6 @@ public interface UserService {
     User updateById(Long id, Map<String, Object> updates);
 
     Long deleteById(Long id);
+
+    void validate(User user);
 }
