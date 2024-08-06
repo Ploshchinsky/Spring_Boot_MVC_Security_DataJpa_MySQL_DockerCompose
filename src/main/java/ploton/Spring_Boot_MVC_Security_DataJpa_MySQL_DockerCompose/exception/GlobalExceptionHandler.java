@@ -17,4 +17,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> entityValidateExceptionHandler(EntityValidateException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserIdNotFoundException.class)
+    public ResponseEntity<?> userIdNotFoundException(UserIdNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
