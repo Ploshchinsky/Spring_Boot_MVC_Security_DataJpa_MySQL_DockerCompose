@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.EntityValidateException;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UserIdNotFoundException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -19,17 +20,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        return null;
+        validate(user);
+        return userRepository.save(user);
     }
 
     @Override
     public User findById(Long id) {
-        return null;
+        return userRepository.findById(id).orElseThrow(() ->
+                new UserIdNotFoundException("User ID not found - " + id));
     }
 
     @Override
     public User findByUsername(String username) {
-        return null;
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserIdNotFoundException("Username not found - " + username));
     }
 
     @Override
@@ -39,7 +43,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long deleteById(Long id) {
-        return null;
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return id;
+        }
+        return -1l;
     }
 
     @Override
@@ -59,5 +67,9 @@ public class UserServiceImpl implements UserService {
         if (!errors.isEmpty()) {
             throw new EntityValidateException("User Validate Exception: " + errors);
         }
+    }
+
+    public void updateEntity(User entity, Map<String, Object> updates) {
+
     }
 }
