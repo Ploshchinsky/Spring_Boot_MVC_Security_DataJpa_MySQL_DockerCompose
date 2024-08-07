@@ -22,4 +22,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> userIdNotFoundException(UserIdNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(BadUpdateFieldException.class)
+    public ResponseEntity<?> badUpdateFieldExceptionHandler(BadUpdateFieldException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
