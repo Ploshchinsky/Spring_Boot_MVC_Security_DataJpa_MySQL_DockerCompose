@@ -5,11 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.BadUpdateFieldException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.EntityValidateException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UserIdNotFoundException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.UserRepository;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +43,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateById(Long id, Map<String, Object> updates) {
-        return null;
+        User user = findById(id);
+        EntityUtils.updateEntity(user, updates);
+        return userRepository.save(user);
     }
 
     @Override
@@ -69,7 +76,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void updateEntity(User entity, Map<String, Object> updates) {
-
-    }
 }
