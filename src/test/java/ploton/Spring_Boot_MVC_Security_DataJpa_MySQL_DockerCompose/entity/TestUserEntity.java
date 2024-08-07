@@ -63,6 +63,12 @@ public class TestUserEntity {
         Assertions.assertEquals(expected, actual);
     }
 
+    @Test
+    public void testUpdateFieldsWithReflection_IncorrectFields_BadUpdateFieldException() throws Exception {
+        updates.put("WRONG_FIELD", 666);
+        Assertions.assertThrows(BadUpdateFieldException.class, () -> updateEntity(user, updates));
+    }
+
     private void updateEntity(User entity, Map<String, Object> updates) {
         Class<?> clazz = entity.getClass();
 
