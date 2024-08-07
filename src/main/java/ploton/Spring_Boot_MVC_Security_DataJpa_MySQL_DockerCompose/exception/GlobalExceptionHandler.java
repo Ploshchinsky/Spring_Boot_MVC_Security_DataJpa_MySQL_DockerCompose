@@ -27,4 +27,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> badUpdateFieldExceptionHandler(BadUpdateFieldException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<?> userAlreadyExistsExceptionHandler(UserAlreadyExistsException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }
