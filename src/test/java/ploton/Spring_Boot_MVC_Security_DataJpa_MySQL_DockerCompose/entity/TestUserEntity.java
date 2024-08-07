@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.BadUpdateFieldException;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserDto;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service.EntityUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -84,5 +86,18 @@ public class TestUserEntity {
                 throw new BadUpdateFieldException("No Such Field - " + updateFiled + " ." + e.getMessage());
             }
         }
+    }
+
+    @Test
+    public void testConvertEntityToDto_CorrectInput_Dto() throws Exception {
+        UserDto expected = new UserDto();
+        expected.setUsername(user.getUsername());
+        expected.setEmail(user.getEmail());
+
+        UserDto actual = EntityUtils.convertEntityToDto(user, new UserDto());
+
+        System.out.println(expected);
+        System.out.println(actual);
+        Assertions.assertEquals(expected,actual);
     }
 }
