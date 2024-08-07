@@ -46,6 +46,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
     public User updateById(Long id, Map<String, Object> updates) {
         User user = findById(id);
         EntityUtils.updateEntity(user, updates);
