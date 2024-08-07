@@ -1,17 +1,23 @@
 package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.BadUpdateFieldException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestUserEntity {
     User user;
+    ObjectMapper mapper;
+    Map<String, Object> updates;
 
     @BeforeEach
     public void setUp() {
@@ -20,7 +26,13 @@ public class TestUserEntity {
         user.setUsername("adminName");
         user.setPassword("adminPass");
         user.setEmail("admin@gmail.com");
-        user.setRegistrationDate(LocalDateTime.now());
+
+        mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        updates = new HashMap<>();
+        updates.put("username", "updatedName");
+        updates.put("email", "updatedEmail@ya.ru");
     }
 
     @Test
@@ -41,7 +53,30 @@ public class TestUserEntity {
 
     @Test
     public void testUpdateFieldsWithReflection_CorrectFields_UpdatedEntity() throws Exception {
-        String expected = new ObjectMapper().writeValueAsString(user);
-        System.out.println(expected);
+        String expected = "{\"id\":1,\"username\":\"updatedName\",\"password\":\"adminPass\"," +
+                "\"email\":\"updatedEmail@ya.ru\",\"todoList\":null," +
+                "\"registrationDate\":null,\"lastVisit\":null}";
+
+        updateEntity(user, updates);
+        String actual = mapper.writeValueAsString(user);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    private void updateEntity(User entity, Map<String, Object> updates) {
+        Class<?> clazz = entity.getClass();
+
+        for (Map.Entry<String, Object> entry : updates.entrySet()) {
+            String updateFiled = entry.getKey();
+            Object updateValue = entry.getValue();
+
+            try {
+                Field field = clazz.getDeclaredField(updateFiled);
+                field.setAccessible(true);
+                field.set(entity, updateValue);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new BadUpdateFieldException("No Such Field - " + updateFiled + " ." + e.getMessage());
+            }
+        }
     }
 }
