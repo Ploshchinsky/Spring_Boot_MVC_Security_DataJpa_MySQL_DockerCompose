@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.BadUpdateFieldException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.EntityValidateException;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UserAlreadyExistsException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UserIdNotFoundException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.UserRepository;
 
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         validate(user);
+        if (findByUsername(user.getUsername()) != null) {
+            throw new UserAlreadyExistsException("User with username - " + user.getUsername() + " already exists");
+        }
         return userRepository.save(user);
     }
 
