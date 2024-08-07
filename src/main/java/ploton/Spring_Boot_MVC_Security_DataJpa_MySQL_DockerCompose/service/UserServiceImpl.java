@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
-import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.BadUpdateFieldException;
-import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.EntityValidateException;
-import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UserAlreadyExistsException;
-import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UserIdNotFoundException;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.*;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.UserRepository;
 
 import java.lang.reflect.Constructor;
@@ -27,22 +24,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         validate(user);
-        if (findByUsername(user.getUsername()) != null) {
-            throw new UserAlreadyExistsException("User with username - " + user.getUsername() + " already exists");
+        try {
+            findByUsername(user.getUsername());
+            throw new UserAlreadyExistsException("User Already Exists - " + user.getUsername());
+        } catch (UsernameNotFoundException e) {
+            return userRepository.save(user);
         }
-        return userRepository.save(user);
     }
 
     @Override
-    public User findById(Long id) {
+    public User findById(Long id){
         return userRepository.findById(id).orElseThrow(() ->
                 new UserIdNotFoundException("User ID not found - " + id));
     }
 
     @Override
-    public User findByUsername(String username) {
+    public User findByUsername(String username){
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserIdNotFoundException("Username not found - " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found - " + username));
     }
 
     @Override
