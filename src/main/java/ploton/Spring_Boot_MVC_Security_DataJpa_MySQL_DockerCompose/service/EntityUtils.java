@@ -1,8 +1,5 @@
 package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service;
 
-import org.hibernate.sql.Update;
-import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.Todo;
-import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.BadUpdateFieldException;
 
 import java.lang.reflect.Field;
@@ -25,6 +22,25 @@ public class EntityUtils {
                 throw new BadUpdateFieldException("Wrong Field - " + fieldName + ". " + e.getMessage());
             }
         }
+    }
+
+    public static <E, D> D convertEntityToDto(E entity, D dto) {
+        Class<?> entityClass = entity.getClass();
+        Field[] dtoFields = dto.getClass().getDeclaredFields();
+        for (Field f : dtoFields) {
+            String dtoFieldName = f.getName();
+            try {
+                Field entityField = entityClass.getDeclaredField(dtoFieldName);
+                entityField.setAccessible(true);
+                Object entityValue = entityField.get(entity);
+
+                f.setAccessible(true);
+                f.set(dto, entityValue);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new BadUpdateFieldException("Wrong Field - " + dtoFieldName + ". " + e);
+            }
+        }
+        return dto;
     }
 
 }
