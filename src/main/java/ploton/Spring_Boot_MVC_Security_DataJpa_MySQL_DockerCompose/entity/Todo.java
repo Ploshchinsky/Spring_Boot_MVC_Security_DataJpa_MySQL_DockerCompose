@@ -32,5 +32,6 @@ public class Todo {
     @PrePersist
     protected void onCreate() {
         this.creationTime = LocalDateTime.now();
+        this.isComplete = false;
     }
 }
