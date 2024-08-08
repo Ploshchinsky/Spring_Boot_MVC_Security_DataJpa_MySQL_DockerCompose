@@ -29,7 +29,7 @@ public class User {
     private LocalDateTime lastVisit;
 
     @PrePersist
-    private void onCreate() {
+    protected void onCreate() {
         this.registrationDate = LocalDateTime.now();
     }
 }
