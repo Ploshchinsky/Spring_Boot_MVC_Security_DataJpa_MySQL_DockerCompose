@@ -16,7 +16,7 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping("/new")
-    public ResponseEntity<?> save(Todo entity) {
+    public ResponseEntity<?> save(@RequestBody Todo entity) {
         return new ResponseEntity<>(todoService.save(entity), HttpStatus.ACCEPTED);
     }
 
