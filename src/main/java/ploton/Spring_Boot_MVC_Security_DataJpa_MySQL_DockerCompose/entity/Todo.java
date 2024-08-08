@@ -28,7 +28,7 @@ public class Todo {
     private User user;
 
     @PrePersist
-    private void onCreate() {
+    protected void onCreate() {
         this.creationTime = LocalDateTime.now();
     }
 }
