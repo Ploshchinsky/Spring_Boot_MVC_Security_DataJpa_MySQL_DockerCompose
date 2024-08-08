@@ -15,7 +15,7 @@ public class Todo {
     private String description;
 
     @Column(name = "is_complete")
-    private boolean isComplete;
+    private Boolean isComplete;
 
     @Column(name = "creation_time", nullable = false, updatable = false)
     private LocalDateTime creationTime;
