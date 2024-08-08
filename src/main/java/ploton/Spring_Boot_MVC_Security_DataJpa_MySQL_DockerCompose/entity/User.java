@@ -1,5 +1,6 @@
 package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Todo> todoList;
 
     @Column(name = "registration_date", nullable = false, updatable = false)
