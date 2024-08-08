@@ -8,6 +8,17 @@ CREATE TABLE users
     last_visit TIMESTAMP
 );
 
+CREATE TABLE todos
+(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    description VARCHAR(255) NOT NULL,
+    is_complete BOOLEAN DEFAULT FALSE,
+    creation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    complete_time TIMESTAMP,
+    user_id BIGINT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 CREATE TABLE roles
 (
     id INT AUTO_INCREMENT PRIMARY KEY,
