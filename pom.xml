@@ -103,6 +103,16 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>10.10.0</version>
+				<configuration>
+					<url>jdbc:mysql://localhost:3307/todo_app_db</url>
+					<user>root</user>
+					<password>root</password>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
