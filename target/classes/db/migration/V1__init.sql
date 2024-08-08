@@ -29,7 +29,7 @@ VALUES ('ROLE_USER'),
        ('ROLE_MODERATOR');
 
 insert into users (username, password, email, registration_date, last_visit)
-values ('admin', 'admin', 'admin@yahoo,com', CURRENT_TIMESTAMP, null);
+values ('admin', '$2a$12$FKXNBq0YJpS2aAVLCf9acuV6IYOjxhw2nItmo7wON2CyJ6EGmcAqe', 'admin@yahoo,com', CURRENT_TIMESTAMP, null);
 
 insert into users_roles (user_id, role_id)
 values (1, 2);
