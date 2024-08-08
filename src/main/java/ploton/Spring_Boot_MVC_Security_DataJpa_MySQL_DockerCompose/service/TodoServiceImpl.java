@@ -64,10 +64,6 @@ public class TodoServiceImpl implements TodoService {
         if (!todo.getDescription().matches("^[\\w ]+$")) {
             errors.add("Wrong Description. Only chars [a-z, A-Z, 0-9]");
         }
-        if (!(todo.getCompleteTime() instanceof LocalDateTime)
-                || !(todo.getCreationTime() instanceof LocalDateTime)) {
-            errors.add("Wrong Complete or Creation Time Time.");
-        }
 
         if (!errors.isEmpty()) {
             throw new EntityValidateException("Todo Validate Exception: " + errors);
