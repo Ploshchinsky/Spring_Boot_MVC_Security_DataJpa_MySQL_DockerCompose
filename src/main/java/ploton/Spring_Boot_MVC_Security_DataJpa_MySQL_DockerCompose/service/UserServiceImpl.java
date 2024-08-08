@@ -1,29 +1,47 @@
 package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.*;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.RoleRepository;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.UserRepository;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+
+    @Transactional
+    @Override
+    public UserDetails loadUserByUsername(String username)
+            throws org.springframework.security.core.userdetails.UsernameNotFoundException {
+        User user = findByUsername(username);
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                user.getRoles()
+                        .stream()
+                        .map(role ->
+                                new SimpleGrantedAuthority(role.getName()))
+                        .toList()
+        );
+    }
 
     @Override
     public User save(User user) {
         validate(user);
+        intiRoleByDefault(user);
         try {
             findByUsername(user.getUsername());
             throw new UserAlreadyExistsException("User Already Exists - " + user.getUsername());
@@ -33,13 +51,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long id){
+    public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new UserIdNotFoundException("User ID not found - " + id));
     }
 
     @Override
-    public User findByUsername(String username){
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found - " + username));
     }
@@ -82,6 +100,13 @@ public class UserServiceImpl implements UserService {
         if (!errors.isEmpty()) {
             throw new EntityValidateException("User Validate Exception: " + errors);
         }
+    }
+
+    private void intiRoleByDefault(User user) {
+        String defaultRole = "ROLE_USER";
+        user.setRoles(List.of(roleRepository.findByName(defaultRole).orElseThrow(
+                () -> new NoSuchElementException("Role not found - " + defaultRole)
+        )));
     }
 
 }
