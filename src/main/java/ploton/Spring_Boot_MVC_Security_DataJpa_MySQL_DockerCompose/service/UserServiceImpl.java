@@ -11,6 +11,7 @@ import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.*;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.RoleRepository;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.UserRepository;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils.EntityUtils;
 
 import java.util.ArrayList;
 import java.util.List;

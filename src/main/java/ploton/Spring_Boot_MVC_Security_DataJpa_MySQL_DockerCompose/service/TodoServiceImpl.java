@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.Todo;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.EntityValidateException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.TodoRepository;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils.EntityUtils;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

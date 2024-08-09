@@ -1,4 +1,4 @@
-package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service;
+package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils;
 
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.BadUpdateFieldException;
 
