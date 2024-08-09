@@ -25,6 +25,8 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.
                 authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/v1/users/reg", "/api/v1/users/login").permitAll()
+                        .requestMatchers("/api/v1/users/add-role").hasAnyRole("ADMIN")
                         .anyRequest().authenticated())
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
