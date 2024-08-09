@@ -3,10 +3,12 @@ package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -17,13 +19,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
+@Slf4j
 public class JwtUtils {
     @Value("${jwt.secret}")
-    private static String SECRET;
+    private String SECRET;
     @Value("${jwt.lifetime}")
-    private static Long LIFE_TIME;
+    private Long LIFE_TIME;
 
-    public static String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
 
         String username = userDetails.getUsername();
@@ -45,18 +49,18 @@ public class JwtUtils {
                 .compact();
     }
 
-    public static Claims getClaimsFromToken(String token) {
+    public Claims getClaimsFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET)
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    public static String getUserName(String token) {
+    public String getUserName(String token) {
         return getClaimsFromToken(token).getSubject();
     }
 
-    public static List<String> getRoles(String token) {
+    public List<String> getRoles(String token) {
         return getClaimsFromToken(token).get("roles", List.class);
     }
 
