@@ -21,6 +21,7 @@ import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils.JwtUtil
 public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
     @PostMapping("/auth")
     public ResponseEntity<?> auth(UserAuthDto userAuth) {
@@ -28,7 +29,7 @@ public class AuthController {
                 userAuth.getUsername(), userAuth.getPassword()
         ));
         UserDetails userDetails = userService.loadUserByUsername(userAuth.getUsername());
-        String token = JwtUtils.generateToken(userDetails);
+        String token = jwtUtils.generateToken(userDetails);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 }
