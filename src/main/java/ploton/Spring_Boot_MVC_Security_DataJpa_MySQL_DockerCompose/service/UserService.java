@@ -1,5 +1,6 @@
 package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UserIdNotFoundException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UsernameNotFoundException;
@@ -7,7 +8,7 @@ import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.Use
 import java.util.List;
 import java.util.Map;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     User save(User user);
 
     User findById(Long id) throws UserIdNotFoundException;
