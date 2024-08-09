@@ -1,6 +1,7 @@
 package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +24,7 @@ import java.util.NoSuchElementException;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-//    private final BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         validate(user);
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         intiRoleByDefault(user);
         try {
             findByUsername(user.getUsername());
