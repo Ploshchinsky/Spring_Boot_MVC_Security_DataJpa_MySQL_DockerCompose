@@ -31,8 +31,9 @@ public class UserController {
 
     @GetMapping("/id/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-        UserDto dto = EntityUtils.convertEntityToDto(userService.findById(id), new UserDto());
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+//        UserDto dto = EntityUtils.convertEntityToDto(userService.findById(id), new UserDto());
+//        return new ResponseEntity<>(dto, HttpStatus.OK);
+        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
     @GetMapping("/username/{username}")
@@ -66,9 +67,10 @@ public class UserController {
         User user = userService.findByUsername(userRoleDto.getUsername());
         Role role = roleService.findByName(userRoleDto.getRole());
         if (user != null && role != null) {
-            List<Role> temp = user.getRoles();
-            temp.add(role);
-            user.setRoles(temp);
+            List<Role> roles = user.getRoles();
+            roles.add(role);
+            Map<String, Object> updates = Map.of("roles", roles);
+            userService.updateById(user.getId(), updates);
         }
         return new ResponseEntity<>(role, HttpStatus.ACCEPTED);
     }
