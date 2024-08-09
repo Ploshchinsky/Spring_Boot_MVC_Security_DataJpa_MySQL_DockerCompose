@@ -3,6 +3,7 @@ package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.Role;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
@@ -73,5 +74,10 @@ public class UserController {
             userService.updateById(user.getId(), updates);
         }
         return new ResponseEntity<>(role, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> profile(Authentication authentication) {
+        return new ResponseEntity<>(authentication, HttpStatus.OK);
     }
 }
