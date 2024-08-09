@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.Role;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserDto;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserRoleDto;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.RoleRepository;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service.EntityUtils;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service.RoleService;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service.UserService;
 
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final RoleService roleService;
 
     @PostMapping("/reg")
     public ResponseEntity<?> registration(@RequestBody User user) {
@@ -54,5 +59,17 @@ public class UserController {
     @DeleteMapping("/id/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(userService.deleteById(id), HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/add-role")
+    public ResponseEntity<?> addRoleByUsername(@RequestBody UserRoleDto userRoleDto) {
+        User user = userService.findByUsername(userRoleDto.getUsername());
+        Role role = roleService.findByName(userRoleDto.getRole());
+        if (user != null && role != null) {
+            List<Role> temp = user.getRoles();
+            temp.add(role);
+            user.setRoles(temp);
+        }
+        return new ResponseEntity<>(role, HttpStatus.ACCEPTED);
     }
 }
