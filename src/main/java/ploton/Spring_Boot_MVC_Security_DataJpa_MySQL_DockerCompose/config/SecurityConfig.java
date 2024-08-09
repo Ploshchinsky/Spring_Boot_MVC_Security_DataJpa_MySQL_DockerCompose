@@ -26,7 +26,9 @@ public class SecurityConfig {
         return http.
                 authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/users/reg", "/api/v1/users/login").permitAll()
-                        .requestMatchers("/api/v1/users/add-role").hasAnyRole("ADMIN")
+                        .requestMatchers("/api/v1/users/id/").hasAnyRole("ADMIN", "MODERATOR")
+                        .requestMatchers("/api/v1/users/add-role").hasAnyRole("ADMIN", "MODERATOR")
+                        .requestMatchers("/api/v1/users/profile").authenticated()
                         .anyRequest().authenticated())
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
