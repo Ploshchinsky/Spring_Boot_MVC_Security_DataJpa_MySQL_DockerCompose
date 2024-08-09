@@ -36,6 +36,7 @@ public class JwtUtils {
                 .map(GrantedAuthority::getAuthority).toList();
 
         claims.put(username, authorities);
+        claims.put("roles", authorities);
 
         Date issueDate = new Date();
         Date expiredDate = new Date(issueDate.getTime() + LIFE_TIME);
