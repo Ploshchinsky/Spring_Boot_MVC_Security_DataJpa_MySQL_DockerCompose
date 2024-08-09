@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service.UserService;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service.UserServiceImpl;
 
@@ -26,6 +27,7 @@ import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service.UserS
 @EnableWebSecurity
 public class SecurityConfig {
     private final UserService userService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
@@ -64,6 +66,7 @@ public class SecurityConfig {
                         authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
 //                .formLogin(Customizer.withDefaults())
                 .logout(Customizer.withDefaults())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
