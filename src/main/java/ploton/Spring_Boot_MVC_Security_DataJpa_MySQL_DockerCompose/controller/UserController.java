@@ -16,6 +16,7 @@ import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service.UserS
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -78,6 +79,9 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<?> profile(Authentication authentication) {
-        return new ResponseEntity<>(authentication, HttpStatus.OK);
+        String username = authentication.getName();
+        Optional<User> user = Optional.of(userService.findByUsername(username));
+        UserDto userDto = EntityUtils.convertEntityToDto(user.get(), new UserDto());
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }
