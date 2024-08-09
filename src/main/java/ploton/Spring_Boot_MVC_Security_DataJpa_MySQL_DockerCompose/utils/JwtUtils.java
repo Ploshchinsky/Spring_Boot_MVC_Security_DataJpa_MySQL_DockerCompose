@@ -1,5 +1,6 @@
 package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +23,7 @@ public class JwtUtils {
     @Value("${jwt.lifetime}")
     private static Long LIFE_TIME;
 
-    public String generateToken(UserDetails userDetails) {
+    public static String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
 
         String username = userDetails.getUsername();
@@ -35,6 +36,28 @@ public class JwtUtils {
         Date issueDate = new Date();
         Date expiredDate = new Date(issueDate.getTime() + LIFE_TIME);
 
-        return null;
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(issueDate)
+                .setExpiration(expiredDate)
+                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .compact();
     }
+
+    public static Claims getClaimsFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public static String getUserName(String token) {
+        return getClaimsFromToken(token).getSubject();
+    }
+
+    public static List<String> getRoles(String token) {
+        return getClaimsFromToken(token).get("roles", List.class);
+    }
+
 }
