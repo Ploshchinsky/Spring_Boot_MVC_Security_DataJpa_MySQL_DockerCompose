@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: spring-rest-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3307/todo_app_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+  db:
+    container_name: mysql-db
+    image: mysql
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DB: todo_app_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root

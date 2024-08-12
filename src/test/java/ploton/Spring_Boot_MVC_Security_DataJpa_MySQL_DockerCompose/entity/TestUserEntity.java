@@ -37,7 +37,7 @@ public class TestUserEntity {
 
     @Test
     public void testGetReflectionMethods_UserEntity_Methods() throws Exception {
-        String[] expected = {"id", "username", "password", "email", "todoList", "registrationDate", "lastVisit"};
+        String[] expected = {"id", "username", "password", "email", "todoList", "roles", "registrationDate", "lastVisit"};
 
         Class<?> clazz = User.class;
         Field[] fields = clazz.getDeclaredFields();
@@ -55,7 +55,7 @@ public class TestUserEntity {
     public void testUpdateFieldsWithReflection_CorrectFields_UpdatedEntity() throws Exception {
         String expected = "{\"id\":1,\"username\":\"updatedName\",\"password\":\"adminPass\"," +
                 "\"email\":\"updatedEmail@ya.ru\",\"todoList\":null," +
-                "\"registrationDate\":null,\"lastVisit\":null}";
+                "\"roles\":null,\"registrationDate\":null,\"lastVisit\":null}";
 
         updateEntity(user, updates);
         String actual = mapper.writeValueAsString(user);
@@ -89,6 +89,7 @@ public class TestUserEntity {
     @Test
     public void testConvertEntityToDto_CorrectInput_Dto() throws Exception {
         UserDto expected = new UserDto();
+        expected.setId(1l);
         expected.setUsername(user.getUsername());
         expected.setEmail(user.getEmail());
 
