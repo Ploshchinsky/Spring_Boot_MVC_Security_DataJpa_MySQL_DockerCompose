@@ -1,6 +1,7 @@
 package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,10 +30,11 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
-
-    private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    @Lazy
+    private AuthenticationManager authenticationManager;
 
     @Transactional
     @Override
