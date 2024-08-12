@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,6 +15,7 @@ import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.Role;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.*;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserAuthDto;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserDto;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserRoleDto;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.RoleRepository;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.UserRepository;
@@ -116,6 +118,13 @@ public class UserServiceImpl implements UserService {
         ));
         UserDetails userDetails = loadUserByUsername(userAuthDto.getUsername());
         return jwtUtils.generateToken(userDetails);
+    }
+
+    @Override
+    public UserDto getInfo(Authentication authentication) {
+        String username = authentication.getName();
+        User user = findByUsername(username);
+        return EntityUtils.convertEntityToDto(user, new UserDto());
     }
 
     //Utils

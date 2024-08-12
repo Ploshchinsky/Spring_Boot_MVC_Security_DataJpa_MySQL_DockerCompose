@@ -1,11 +1,13 @@
 package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.Role;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UserIdNotFoundException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.UsernameNotFoundException;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserAuthDto;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserDto;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserRoleDto;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public interface UserService extends UserDetailsService {
     Role addRole(UserRoleDto userRoleDto);
 
     String getToken(UserAuthDto userAuthDto);
+    UserDto getInfo(Authentication authentication);
 
     void validate(User user);
 }
