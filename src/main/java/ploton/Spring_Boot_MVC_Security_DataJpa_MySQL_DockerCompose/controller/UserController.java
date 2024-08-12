@@ -53,9 +53,6 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<?> profile(Authentication authentication) {
-        String username = authentication.getName();
-        Optional<User> user = Optional.of(userService.findByUsername(username));
-        UserDto userDto = EntityUtils.convertEntityToDto(user.get(), new UserDto());
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getInfo(authentication), HttpStatus.OK);
     }
 }
