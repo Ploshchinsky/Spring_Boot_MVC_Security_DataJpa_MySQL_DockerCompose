@@ -28,18 +28,10 @@ import java.util.Map;
 @RequestMapping("/api/v1/users")
 public class AuthController {
     private final UserService userService;
-    private final RoleService roleService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
 
     @PostMapping("/auth")
     public ResponseEntity<?> auth(UserAuthDto userAuth) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                userAuth.getUsername(), userAuth.getPassword()
-        ));
-        UserDetails userDetails = userService.loadUserByUsername(userAuth.getUsername());
-        String token = jwtUtils.generateToken(userDetails);
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getToken(userAuth), HttpStatus.OK);
     }
 
     @PostMapping("/reg")
@@ -50,14 +42,6 @@ public class AuthController {
 
     @PostMapping("/add-role")
     public ResponseEntity<?> addRoleByUsername(@RequestBody UserRoleDto userRoleDto) {
-        User user = userService.findByUsername(userRoleDto.getUsername());
-        Role role = roleService.findByName(userRoleDto.getRole());
-        if (user != null && role != null) {
-            List<Role> roles = user.getRoles();
-            roles.add(role);
-            Map<String, Object> updates = Map.of("roles", roles);
-            userService.updateById(user.getId(), updates);
-        }
-        return new ResponseEntity<>(role, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(userService.addRole(userRoleDto), HttpStatus.ACCEPTED);
     }
 }
