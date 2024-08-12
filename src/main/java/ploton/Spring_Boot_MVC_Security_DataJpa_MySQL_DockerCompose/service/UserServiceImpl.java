@@ -23,6 +23,7 @@ import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.Us
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils.EntityUtils;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils.JwtUtils;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -119,7 +120,13 @@ public class UserServiceImpl implements UserService {
                 userAuthDto.getUsername(), userAuthDto.getPassword()
         ));
         UserDetails userDetails = loadUserByUsername(userAuthDto.getUsername());
+        updateLastVisit(userAuthDto);
         return jwtUtils.generateToken(userDetails);
+    }
+
+    private void updateLastVisit(UserAuthDto userAuthDto) {
+        User user = findByUsername(userAuthDto.getUsername());
+        updateById(user.getId(), Collections.singletonMap("lastVisit", LocalDateTime.now()));
     }
 
     @Override
