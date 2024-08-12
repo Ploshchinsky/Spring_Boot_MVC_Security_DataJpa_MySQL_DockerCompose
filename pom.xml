@@ -94,15 +94,8 @@
     </dependencies>
 
     <build>
+        <finalName>spring-rest-app</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <finalName>spring-rest-app</finalName>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -120,7 +113,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>10.10.0</version>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3307/todo_app_db</url>
+                    <url>jdbc:mysql://mysql:3306/todo_app_db</url>
                     <user>root</user>
                     <password>root</password>
                 </configuration>
