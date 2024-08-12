@@ -28,7 +28,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
@@ -97,15 +97,15 @@ public class UserServiceImpl implements UserService {
     }
 
     public Role addRole(UserRoleDto userRoleDto) {
-        Optional<User> user = userRepository.findByUsername(userRoleDto.getUsername());
-        Optional<Role> role = roleRepository.findByName(userRoleDto.getRole());
+        User user = findByUsername(userRoleDto.getUsername());
+        Role role = roleService.findByName(userRoleDto.getRole());
 
-        if (user.isPresent() && role.isPresent()) {
-            List<Role> roles = user.get().getRoles();
-            roles.add(role.get());
+        if (user != null && role != null) {
+            List<Role> roles = user.getRoles();
+            roles.add(role);
             Map<String, Object> updates = Map.of("roles", roles);
-            updateById(user.get().getId(), updates);
-            return role.get();
+            updateById(user.getId(), updates);
+            return role;
         }
         return null;
     }
@@ -149,9 +149,7 @@ public class UserServiceImpl implements UserService {
 
     private void intiRoleByDefault(User user) {
         String defaultRole = "ROLE_USER";
-        user.setRoles(List.of(roleRepository.findByName(defaultRole).orElseThrow(
-                () -> new NoSuchElementException("Role not found - " + defaultRole)
-        )));
+        user.setRoles(List.of(roleService.findByName(defaultRole)));
     }
 
 }
