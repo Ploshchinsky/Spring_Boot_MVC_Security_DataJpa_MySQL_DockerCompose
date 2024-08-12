@@ -11,9 +11,9 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3307/todo_app_db
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/todo_app_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
 
   db:
     container_name: mysql-db
@@ -22,6 +22,5 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_DB: todo_app_db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: todo_app_db
