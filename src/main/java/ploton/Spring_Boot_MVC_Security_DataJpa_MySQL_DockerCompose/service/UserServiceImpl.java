@@ -2,28 +2,34 @@ package ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.Role;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.entity.User;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.exception.*;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserAuthDto;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.model.UserRoleDto;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.RoleRepository;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.repository.UserRepository;
 import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils.EntityUtils;
+import ploton.Spring_Boot_MVC_Security_DataJpa_MySQL_DockerCompose.utils.JwtUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
@@ -88,6 +94,31 @@ public class UserServiceImpl implements UserService {
         return -1l;
     }
 
+    public Role addRole(UserRoleDto userRoleDto) {
+        Optional<User> user = userRepository.findByUsername(userRoleDto.getUsername());
+        Optional<Role> role = roleRepository.findByName(userRoleDto.getRole());
+
+        if (user.isPresent() && role.isPresent()) {
+            List<Role> roles = user.get().getRoles();
+            roles.add(role.get());
+            Map<String, Object> updates = Map.of("roles", roles);
+            updateById(user.get().getId(), updates);
+            return role.get();
+        }
+        return null;
+    }
+
+    @Transactional
+    @Override
+    public String getToken(UserAuthDto userAuthDto) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                userAuthDto.getUsername(), userAuthDto.getPassword()
+        ));
+        UserDetails userDetails = loadUserByUsername(userAuthDto.getUsername());
+        return jwtUtils.generateToken(userDetails);
+    }
+
+    //Utils
     @Override
     public void validate(User user) {
         List<String> errors = new ArrayList<>();
